@@ -1,0 +1,51 @@
+
+# Name your project! Project names should contain only lowercase characters
+# and underscores. A good package name should reflect your organization's
+# name or the intended use of these models
+name: 'WILLIBALD_AUTOMATEDV'
+version: '1.0.0'
+
+# This setting configures which "profile" dbt uses for this project.
+profile: 'WILLIBALD_AUTOMATEDV'
+
+# These configurations specify where dbt should look for different types of files.
+# The `model-paths` config, for example, states that models in this project can be
+# found in the "models/" directory. You probably won't need to change these!
+model-paths: ["models"]
+analysis-paths: ["analyses"]
+test-paths: ["tests"]
+seed-paths: ["seeds"]
+macro-paths: ["macros"]
+snapshot-paths: ["snapshots"]
+
+clean-targets:         # directories to be removed by `dbt clean`
+  - "target"
+  - "dbt_packages"
+
+vars:
+  local_timestamp: "TO_TIMESTAMP(DATEADD(HOUR, 1, SYSDATE()))"
+# Configuring models
+# Full documentation: https://docs.getdbt.com/docs/configuring-models
+
+# In this example config, we tell dbt to build all models in the example/
+# directory as views. These settings can be overridden in the individual model
+# files using the `{{ config(...) }}` macro.
+models:
+  WILLIBALD_AUTOMATEDV:
+    dwh_00_meta:
+        +schema: dwh_00_meta
+        tags:
+            - meta
+    dwh_02_load:
+        +schema: dwh_02_load
+        tags:
+            - load
+    dwh_03_stage:
+        +schema: dwh_03_stage
+        tags:
+            - stage
+    dwh_04_rv:
+        +schema: dwh_04_rv
+        tags:
+            - rv                    
+         
