@@ -1,0 +1,10 @@
+[sqlfluff]
+dialect = snowflake  # Set the default dialect to snowflake
+
+# Increase the line length limit (default is 79 characters)
+[sqlfluff:line_length]
+max_line_length = 120
+
+[sqlfluff:paths]
+paths =
+  - "C:\\Entwicklung\\git\\Willibald_AutomateDV\\models\\*"
