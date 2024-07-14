@@ -38,7 +38,7 @@ jobs:
     - name: Create dbt profiles.yml
       run: |
         mkdir -p ~/.dbt
-        echo "default:" > ~/.dbt/profiles.yml
+        echo "WILLIBALD_AUTOMATEDV:" > ~/.dbt/profiles.yml
         echo "  target: dev" >> ~/.dbt/profiles.yml
         echo "  outputs:" >> ~/.dbt/profiles.yml
         echo "    dev:" >> ~/.dbt/profiles.yml
