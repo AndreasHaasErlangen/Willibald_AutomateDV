@@ -52,6 +52,12 @@ jobs:
         echo "      schema: ${{ secrets.SNOWFLAKE_SCHEMA }}" >> ~/.dbt/profiles.yml
         echo "      client_session_keep_alive: False" >> ~/.dbt/profiles.yml
 
+    - name: Debug profiles.yml
+      run: cat ~/.dbt/profiles.yml
+
+    - name: Debug Environment Variables
+      run: printenv | grep SNOWFLAKE
+
     - name: Run dbt
       run: |
         . venv/bin/activate
