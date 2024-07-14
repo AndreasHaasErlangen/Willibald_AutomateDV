@@ -61,7 +61,7 @@ jobs:
     - name: Run dbt
       run: |
         . venv/bin/activate
-        dbt deps
-        dbt seed --profiles-dir $GITHUB_WORKSPACE
-        dbt run --profiles-dir $GITHUB_WORKSPACE
-        dbt test --profiles-dir $GITHUB_WORKSPACE
+        dbt deps --profiles-dir ~/.dbt
+        dbt seed --profiles-dir ~/.dbt
+        dbt run --profiles-dir ~/.dbt
+        dbt test --profiles-dir ~/.dbt
