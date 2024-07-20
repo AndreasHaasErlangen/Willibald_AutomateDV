@@ -2,8 +2,6 @@
 {# automatically generated based on dataspot#}
 
 {{ config(materialized='view') }}
-{%- set unknown_key = get_dict_hash_value("unknown_key") -%}
-{%- set error_key = get_dict_hash_value("error_key") -%}
 
 {%- set yaml_metadata -%}
 source_model: 
@@ -46,31 +44,24 @@ hashed_columns:
       - rabatt
 
 
-
-
 derived_columns:
     associationpartner_bk:
-      value: vereinspartnerid
-      datatype: 'VARCHAR'
+      - vereinspartnerid
     customer_bk:
-      value: kundeid
-      datatype: 'VARCHAR'
+      - kundeid
     order_bk:
-      value: bestellungid
-      datatype: 'VARCHAR'
+      - bestellungid
     position_bk:
-      value: cast(BESTELLUNGID ||'_'|| produktid ||'_'|| cast(row_number() over (partition by ldts, bestellungid, produktid  order by menge, preis) as varchar) as varchar)
-      datatype: 'VARCHAR'
+      - cast(BESTELLUNGID ||'_'|| produktid ||'_'|| cast(row_number() over (partition by ldts, bestellungid, produktid  order by menge, preis) as varchar) as varchar)
+      
     product_bk:
-      value: produktid
-      datatype: 'VARCHAR'
+      - produktid
+
 
     cdts:
-      value: {{var("local_timestamp")}}
-      datatype: 'TIMESTAMP'
+      - {{var("local_timestamp")}}
     edts:      
-      value: edts_in
-      datatype: 'DATE'
+      - edts_in
 
 rsrc: 'rsrc' 
 ldts: 'ldts'
@@ -80,12 +71,9 @@ include_source_columns: true
 
 {% set metadata_dict = fromyaml(yaml_metadata) %}
 
-{{ datavault4dbt.stage(include_source_columns=metadata_dict['include_source_columns'],
+{{ automate_dv.stage(include_source_columns=metadata_dict['include_source_columns'],
                   source_model=metadata_dict['source_model'],
                   hashed_columns=metadata_dict['hashed_columns'],
-                  derived_columns=metadata_dict['derived_columns'],                  
-                  rsrc=metadata_dict['rsrc'],
-                  ldts=metadata_dict['ldts'],
-                  prejoined_columns=metadata_dict['prejoined_columns'],
-                  multi_active_config=metadata_dict['multi_active_config']) }}
+                  derived_columns=metadata_dict['derived_columns']) }}
+                  
 where is_check_ok or rsrc ='SYSTEM'                  
