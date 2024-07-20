@@ -6,14 +6,11 @@
 {%- set yaml_metadata -%}
 source_model: 
     - stg_roadshow_bestellung
-    - stg_webshop_bestellung
-    - stg_webshop_kunde
-    - stg_webshop_lieferadresse
-    - stg_webshop_vereinspartner
-    - stg_webshop_wohnort
+    - stg_webshop_lieferung
+    - stg_webshop_position
 
-src_pk: hk_customer_h
-src_nk: 'customer_bk'
+src_pk: hk_position_h
+src_nk: 'position_bk'
 src_ldts: ldts
 src_source: rsrc
 {%- endset -%}

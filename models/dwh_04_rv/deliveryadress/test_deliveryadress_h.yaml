@@ -1,0 +1,18 @@
+
+# automatically generated based on dataspot
+version: 2
+models:
+  - name: deliveryadress_h
+    tags:
+      - deliveryadress
+    description: "Hub of deliveryadress"
+    columns:
+      - name: hk_deliveryadress_h
+        description: "Hashkey of deliveryadress"
+        data_tests:
+          - not_null
+    data_tests:
+       - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+             - hk_deliveryadress_h
+
