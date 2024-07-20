@@ -5,56 +5,29 @@
 
 {%- set yaml_metadata -%}
 source_model: 
-  'load_roadshow_bestellung'
+  'load_webshop_vereinspartner'
 hashed_columns:
   hk_associationpartner_h:
     - vereinspartnerid
   hk_customer_h:
-    - kundeid
-  hk_order_h:
-    - bestellungid
-  hk_position_h:
-    - bestellungid
-    - produktid
-  hk_product_h:
-    - produktid
-  hk_order_associationpartner_l:
-    - order_bk
-    - associationpartner_bk
-  hk_order_customer_l:
-    - order_bk
+    - kundeidverein
+  hk_associationpartner_customer_l:
     - customer_bk
-  hk_order_position_l:
-    - position_bk
-    - order_bk
-  hk_position_product_l:
-    - product_bk
-    - position_bk
-  hd_position_rs_s:
+    - associationpartner_bk
+  hd_associationpartner_ws_s:
     is_hashdiff: true
     columns:
-      - bestellungid
-      - gueltigbis
-      - kaufdatum
-      - kkfirma
-      - kreditkarte
-      - menge
-      - preis
-      - produktid
-      - rabatt
+      - kundeidverein
+      - rabatt1
+      - rabatt2
+      - rabatt3
 
 
 derived_columns:
     associationpartner_bk:
       - vereinspartnerid
     customer_bk:
-      - kundeid
-    order_bk:
-      - bestellungid
-    position_bk:
-      - cast(BESTELLUNGID ||'_'|| produktid ||'_'|| cast(row_number() over (partition by ldts, bestellungid, produktid  order by menge, preis) as varchar) as varchar)
-    product_bk:
-      - produktid
+      - kundeidverein
 
     cdts:
       - {{var("local_timestamp")}}

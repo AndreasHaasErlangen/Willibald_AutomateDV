@@ -5,35 +5,31 @@
 
 {%- set yaml_metadata -%}
 source_model: 
-  'load_webshop_kunde'
+  'load_webshop_produkt'
 hashed_columns:
-  hk_associationpartner_h:
-    - vereinspartnerid
-  hk_customer_h:
-    - kundeid
-  hk_customer_associationpartner_l:
-    - customer_bk
-    - associationpartner_bk
-  hd_customer_ws_s:
+  hk_product_h:
+    - produktid
+  hk_productcategory_h:
+    - katid
+  hk_product_productcategory_l:
+    - productcategory_bk
+    - product_bk
+  hd_product_ws_s:
     is_hashdiff: true
     columns:
-      - email
-      - geburtsdatum
-      - geschlecht
-      - gueltigbis
-      - kkfirma
-      - kreditkarte
-      - mobil
-      - name
-      - telefon
-      - vorname
+      - bezeichnung
+      - pflanzabstand
+      - pflanzort
+      - preis
+      - typ
+      - umfang
 
 
 derived_columns:
-    associationpartner_bk:
-      - vereinspartnerid
-    customer_bk:
-      - kundeid
+    product_bk:
+      - produktid
+    productcategory_bk:
+      - katid
 
     cdts:
       - {{var("local_timestamp")}}

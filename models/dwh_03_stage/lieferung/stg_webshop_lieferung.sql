@@ -5,56 +5,42 @@
 
 {%- set yaml_metadata -%}
 source_model: 
-  'load_roadshow_bestellung'
+  'load_webshop_lieferung'
 hashed_columns:
-  hk_associationpartner_h:
-    - vereinspartnerid
-  hk_customer_h:
-    - kundeid
+  hk_deliveryadress_h:
+    - lieferadrid
+  hk_deliveryservice_h:
+    - lieferdienstid
   hk_order_h:
     - bestellungid
   hk_position_h:
     - bestellungid
-    - produktid
-  hk_product_h:
-    - produktid
-  hk_order_associationpartner_l:
-    - order_bk
-    - associationpartner_bk
-  hk_order_customer_l:
-    - order_bk
-    - customer_bk
+    - posid
   hk_order_position_l:
     - position_bk
     - order_bk
-  hk_position_product_l:
-    - product_bk
-    - position_bk
-  hd_position_rs_s:
+  hk_delivery_l:
+    - lieferadrid
+    - lieferdienstid
+    - bestellungid
+    - bestellungid
+    - posid
+  hd_position_ws_s:
     is_hashdiff: true
     columns:
       - bestellungid
-      - gueltigbis
-      - kaufdatum
-      - kkfirma
-      - kreditkarte
-      - menge
-      - preis
-      - produktid
-      - rabatt
+      - posid
 
 
 derived_columns:
-    associationpartner_bk:
-      - vereinspartnerid
-    customer_bk:
-      - kundeid
+    deliveryadress_bk:
+      - lieferadrid
+    deliveryservice_bk:
+      - lieferdienstid
     order_bk:
       - bestellungid
     position_bk:
-      - cast(BESTELLUNGID ||'_'|| produktid ||'_'|| cast(row_number() over (partition by ldts, bestellungid, produktid  order by menge, preis) as varchar) as varchar)
-    product_bk:
-      - produktid
+      - bestellungid||'_'||posid
 
     cdts:
       - {{var("local_timestamp")}}

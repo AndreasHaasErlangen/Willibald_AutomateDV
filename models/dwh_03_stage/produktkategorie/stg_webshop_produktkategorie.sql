@@ -5,35 +5,26 @@
 
 {%- set yaml_metadata -%}
 source_model: 
-  'load_webshop_kunde'
+  'load_webshop_produktkategorie'
 hashed_columns:
-  hk_associationpartner_h:
-    - vereinspartnerid
-  hk_customer_h:
-    - kundeid
-  hk_customer_associationpartner_l:
-    - customer_bk
-    - associationpartner_bk
-  hd_customer_ws_s:
+  hk_productcategory_h:
+    - katid
+  hk_productcategory_parent_h:
+    - oberkatid
+  hk_productcategory_hierarchy_l:
+    - productcategory_parent_bk
+    - productcategory_bk
+  hd_productcategory_ws_s:
     is_hashdiff: true
     columns:
-      - email
-      - geburtsdatum
-      - geschlecht
-      - gueltigbis
-      - kkfirma
-      - kreditkarte
-      - mobil
       - name
-      - telefon
-      - vorname
 
 
 derived_columns:
-    associationpartner_bk:
-      - vereinspartnerid
-    customer_bk:
-      - kundeid
+    productcategory_bk:
+      - katid
+    productcategory_parent_bk:
+      - oberkatid
 
     cdts:
       - {{var("local_timestamp")}}

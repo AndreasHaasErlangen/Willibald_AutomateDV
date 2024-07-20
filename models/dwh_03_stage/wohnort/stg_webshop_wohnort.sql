@@ -1,3 +1,6 @@
+{# template stage Version:0.1.1 #}
+{# automatically generated based on dataspot#}
+
 {{ config(materialized='view') }}
 
 {%- set yaml_metadata -%}
@@ -22,12 +25,11 @@ derived_columns:
     customer_bk:
       - kundeid
 
-
     cdts:
       - {{var("local_timestamp")}}
-
     edts:      
       - edts_in
+
 
 rsrc: 'rsrc' 
 ldts: 'ldts'
@@ -41,4 +43,5 @@ include_source_columns: true
                   source_model=metadata_dict['source_model'],
                   hashed_columns=metadata_dict['hashed_columns'],
                   derived_columns=metadata_dict['derived_columns']) }}
-where is_check_ok or rsrc ='SYSTEM'                      
+
+where is_check_ok or rsrc ='SYSTEM'                  

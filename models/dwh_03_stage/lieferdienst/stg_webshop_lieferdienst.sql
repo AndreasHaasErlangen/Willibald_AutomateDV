@@ -5,35 +5,27 @@
 
 {%- set yaml_metadata -%}
 source_model: 
-  'load_webshop_kunde'
+  'load_webshop_lieferdienst'
 hashed_columns:
-  hk_associationpartner_h:
-    - vereinspartnerid
-  hk_customer_h:
-    - kundeid
-  hk_customer_associationpartner_l:
-    - customer_bk
-    - associationpartner_bk
-  hd_customer_ws_s:
+  hk_deliveryservice_h:
+    - lieferdienstid
+  hd_deliveryservice_ws_s:
     is_hashdiff: true
     columns:
       - email
-      - geburtsdatum
-      - geschlecht
-      - gueltigbis
-      - kkfirma
-      - kreditkarte
-      - mobil
+      - fax
+      - hausnummer
+      - land
       - name
+      - ort
+      - plz
+      - strasse
       - telefon
-      - vorname
 
 
 derived_columns:
-    associationpartner_bk:
-      - vereinspartnerid
-    customer_bk:
-      - kundeid
+    deliveryservice_bk:
+      - lieferdienstid
 
     cdts:
       - {{var("local_timestamp")}}

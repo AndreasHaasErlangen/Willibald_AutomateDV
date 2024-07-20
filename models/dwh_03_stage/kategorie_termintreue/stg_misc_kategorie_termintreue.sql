@@ -5,35 +5,25 @@
 
 {%- set yaml_metadata -%}
 source_model: 
-  'load_webshop_kunde'
+  'load_misc_kategorie_termintreue'
 hashed_columns:
-  hk_associationpartner_h:
-    - vereinspartnerid
-  hk_customer_h:
-    - kundeid
-  hk_customer_associationpartner_l:
-    - customer_bk
-    - associationpartner_bk
-  hd_customer_ws_s:
+  hd_category_deliveryadherence_misc_rs:
     is_hashdiff: true
     columns:
-      - email
-      - geburtsdatum
-      - geschlecht
-      - gueltigbis
-      - kkfirma
-      - kreditkarte
-      - mobil
-      - name
-      - telefon
-      - vorname
+      - anzahl_tage_von
+      - anzahl_tage_bis
+      - bezeichnung
 
 
 derived_columns:
-    associationpartner_bk:
-      - vereinspartnerid
-    customer_bk:
-      - kundeid
+    category_deliveryadherence_nk:
+      - bewertung
+    count_days_from:
+      - anzahl_tage_von
+    count_days_to:
+      - anzahl_tage_bis
+    name:
+      - bezeichnung
 
     cdts:
       - {{var("local_timestamp")}}
