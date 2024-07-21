@@ -1,3 +1,6 @@
+{# template hub Version:0.1.0 #}
+{# automatically generated based on dataspot#}
+
 {{ config(materialized="table", pre_hook=["{{ datavault_extension.refresh_external_table('WILLIBALD_AUTOMATEDV_DEV.EXT_WEBSHOP_KUNDE','snowflake_external_table') }}"], post_hook=["{{ datavault_extension.insert_hwm(this,'ldts_source') }}"]) }}
 
 {%- set yaml_metadata -%}

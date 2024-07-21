@@ -53,11 +53,6 @@ FROM current_date
 LEFT JOIN (select ldts as file_ldts, count(*) as rowcount from {{ ref("load_webshop_produktkategorie") }} where is_check_ok group by ldts  ) l
     ON 1=1
 UNION ALL
-SELECT 'load_webshop_ref_produkt_typ' as table_name, l.file_ldts, coalesce(l.rowcount, 0) as rowcount, ldts
-FROM current_date 
-LEFT JOIN (select ldts as file_ldts, count(*) as rowcount from {{ ref("load_webshop_ref_produkt_typ") }} where is_check_ok group by ldts  ) l
-    ON 1=1
-UNION ALL
 SELECT 'load_webshop_vereinspartner' as table_name, l.file_ldts, coalesce(l.rowcount, 0) as rowcount, ldts
 FROM current_date 
 LEFT JOIN (select ldts as file_ldts, count(*) as rowcount from {{ ref("load_webshop_vereinspartner") }} where is_check_ok group by ldts  ) l
