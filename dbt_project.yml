@@ -24,12 +24,14 @@ clean-targets:         # directories to be removed by `dbt clean`
 
 vars:
   local_timestamp: "TO_TIMESTAMP(DATEADD(HOUR, 1, SYSDATE()))"
-# Configuring models
-# Full documentation: https://docs.getdbt.com/docs/configuring-models
+  meta_schema: DWH_00_META  
+  external_tables_schema: DWH_01_EXT
+  ext_full_refresh: true
+  
+on-run-start:
+   - '{{ autoexec() }}'
 
-# In this example config, we tell dbt to build all models in the example/
-# directory as views. These settings can be overridden in the individual model
-# files using the `{{ config(...) }}` macro.
+
 models:
   WILLIBALD_AUTOMATEDV:
     dwh_00_meta:
