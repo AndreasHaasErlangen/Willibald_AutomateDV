@@ -2,17 +2,19 @@
 # automatically generated based on dataspot
 version: 2
 models:
-  - name: category_deliveryadherence_r
+  - name: category_deliveryadherence_misc_rs
     tags:
-      - category_deliveryadherence
-    description: "Hub of category_deliveryadherence"
+      - category_deliveryadherence_r
+    description: Satellit for category_deliveryadherence_r
     columns:
       - name: category_deliveryadherence_nk
-        description: "Hashkey of category_deliveryadherence"
         data_tests:
           - not_null
+          - relationships:
+              to: ref('category_deliveryadherence_r')
+              field: category_deliveryadherence_nk
     data_tests:
        - dbt_utils.unique_combination_of_columns:
           combination_of_columns:
              - category_deliveryadherence_nk
-
+             - ldts

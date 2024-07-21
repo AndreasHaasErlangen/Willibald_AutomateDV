@@ -4,20 +4,11 @@
 {{ config(materialized='incremental') }} 
 
 {%- set yaml_metadata -%}
-source_model: "stg_webshop_kunde" 
-src_pk: 'hk_customer_h'
-src_hashdiff: 'hd_customer_ws_s'
+source_model: "stg_webshop_produktkategorie" 
+src_pk: 'hk_productcategory_h'
+src_hashdiff: 'hd_productcategory_ws_s'
 src_payload: 
-  - email
-  - geburtsdatum
-  - geschlecht
-  - gueltigbis
-  - kkfirma
-  - kreditkarte
-  - mobil
   - name
-  - telefon
-  - vorname
 
 
 src_ldts: ldts

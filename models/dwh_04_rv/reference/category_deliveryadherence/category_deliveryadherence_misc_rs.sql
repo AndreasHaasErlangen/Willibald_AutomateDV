@@ -1,13 +1,16 @@
+{# template hub Version:0.1.0 #}
+{# automatically generated based on dataspot#}
+
 {{ config(materialized='incremental') }}
 
 {%- set yaml_metadata -%}
-source_model: 
-    - stg_misc_kategorie_termintreue
-src_pk: 'category_deliveryadherence_nk'
+source_model: stg_misc_kategorie_termintreue
+src_pk: category_deliveryadherence_nk
 src_extra_columns:
-    - count_days_from
-    - count_days_to
-    - name
+  - count_days_from
+  - count_days_to
+  - name
+
 src_ldts: ldts
 src_source: rsrc
 {%- endset -%}
@@ -18,4 +21,6 @@ src_source: rsrc
                    src_ldts=metadata_dict["src_ldts"],
                    src_source=metadata_dict["src_source"],
                    source_model=metadata_dict["source_model"], 
-                   src_extra_columns=metadata_dict["src_extra_columns"]) }}
+                   src_extra_columns=metadata_dict["src_extra_columns"]) }}                  
+
+               

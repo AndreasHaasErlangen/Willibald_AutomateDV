@@ -1,0 +1,20 @@
+
+# automatically generated based on dataspot
+version: 2
+models:
+  - name: customer_ws_s
+    tags:
+      - customer_h
+    description: Satellit for customer_h
+    columns:
+      - name: hk_customer_h
+        data_tests:
+          - not_null
+          - relationships:
+              to: ref('customer_h')
+              field: hk_customer_h
+    data_tests:
+       - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+             - hk_customer_h
+             - ldts
