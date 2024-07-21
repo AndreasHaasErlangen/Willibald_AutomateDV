@@ -31,8 +31,8 @@ derived_columns:
       - edts_in
 
 
-rsrc: 'rsrc' 
-ldts: 'ldts'
+rsrc: 'rsrc_source' 
+ldts: 'ldts_source'
 include_source_columns: true
 
 {%- endset -%}
