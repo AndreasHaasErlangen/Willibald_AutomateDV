@@ -1,13 +1,20 @@
 {{ config(materialized='incremental') }}
 
-{%- set source_model = 'stg_misc_kategorie_termintreue'           -%}
-{%- set src_pk = 'category_deliveryadherence_nk'                          -%}
-{%- set src_ldts = 'ldts'                          -%}
-{%- set src_source = 'rsrc'                          -%}
+{%- set yaml_metadata -%}
+source_model: 
+    - stg_misc_kategorie_termintreue
+src_pk: category_deliveryadherence_nk
+src_ldts: ldts
+src_source: rsrc
+{%- endset -%}
 
-{{ automate_dv.ref_table(src_pk=src_pk, 
-                         source_model=source_model,
-                         src_ldts=src_ldts,
-                         src_source=src_source) }}
+{% set metadata_dict = fromyaml(yaml_metadata) %}
+
+{{ automate_dv.ref_table(src_pk=metadata_dict["src_pk"],
+                   src_ldts=metadata_dict["src_ldts"],
+                   src_source=metadata_dict["src_source"],
+                   source_model=metadata_dict["source_model"]) }}
+
+
 
 
