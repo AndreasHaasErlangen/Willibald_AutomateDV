@@ -41,8 +41,8 @@ derived_columns:
       - edts_in
 
 
-rsrc: 'rsrc' 
-ldts: 'ldts'
+rsrc: 'rsrc_source' 
+ldts: 'ldts_source'
 include_source_columns: true
 
 {%- endset -%}
@@ -54,4 +54,4 @@ include_source_columns: true
                   hashed_columns=metadata_dict['hashed_columns'],
                   derived_columns=metadata_dict['derived_columns']) }}
 
-where is_check_ok or rsrc ='SYSTEM'                  
+where is_check_ok or rsrc_source ='SYSTEM'                  
