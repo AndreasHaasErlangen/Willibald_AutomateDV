@@ -40,10 +40,6 @@ FROM {{ ref("load_webshop_produktkategorie") }}
 where is_check_ok
 UNION 
 SELECT date_trunc(day,ldts) as sdts, True as is_active
-FROM {{ ref("load_webshop_ref_produkt_typ") }}
-where is_check_ok
-UNION 
-SELECT date_trunc(day,ldts) as sdts, True as is_active
 FROM {{ ref("load_webshop_vereinspartner") }}
 where is_check_ok
 UNION 

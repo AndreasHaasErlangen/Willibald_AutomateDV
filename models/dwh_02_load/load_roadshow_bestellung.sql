@@ -1,14 +1,13 @@
-{{ config(materialized="table", pre_hook=["{{ dbt_external_tables.stage_external_sources(select='DWS.EXT_ROADSHOW_BESTELLUNG') }}"], post_hook=["{{ insert_hwm(this) }}"]) }}
+{{ config(materialized="table", pre_hook=["{{ datavault_extension.refresh_external_table('WILLIBALD_AUTOMATEDV_DEV.EXT_ROADSHOW_BESTELLUNG','snowflake_external_table') }}"], post_hook=["{{ datavault_extension.insert_hwm(this,'ldts_source') }}"]) }}
 
 {%- set yaml_metadata -%}
 source_model: 
   source_table: EXT_ROADSHOW_BESTELLUNG
-  source_database: DWS
   source_name: LOAD_EXT
 hwm: True
 source_type: snowflake_external_table
 dub_check:
-- ldts
+- ldts_source
 - bestellungid
 - produktid
 
@@ -61,12 +60,12 @@ columns:
       type_check: True
 
 default_columns:
-    ldts:
+    ldts_source:
       data_type: TIMESTAMP
       format: YYYYMMDD_HH24MISS
       type_check: True
       value: replace(right(filenamedate,19),'.csv','')
-    rsrc:
+    rsrc_source:
       data_type: VARCHAR
       value: filenamedate
 
@@ -98,7 +97,7 @@ additional_columns:
 {%- set sourcetype = metadata_dict['sourcetype'] -%}
 {%- set columns = metadata_dict['columns'] -%}
 
-{{ load(source_model=source_model
+{{ datavault_extension.load(source_model=source_model
                     , default_columns=default_columns
                     , additional_columns=additional_columns
                     , key_check=key_check
