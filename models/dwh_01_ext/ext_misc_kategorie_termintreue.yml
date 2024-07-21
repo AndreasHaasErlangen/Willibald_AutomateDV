@@ -1,8 +1,8 @@
 version: 2
 sources:
-  - name: DWS
-    database: DWS
-    schema: dwh_01_ext
+  - name: WILLIBALD_AUTOMATEDV_DEV
+    database: WILLIBALD_AUTOMATEDV_DEV
+    schema: DWH_01_EXT
     tables:
       - name: EXT_MISC_KATEGORIE_TERMINTREUE
         description: ""
@@ -10,10 +10,10 @@ sources:
         - external
 
         external:
-          location: "@dws.dwh_01_ext.ddvug_willibald_samen_s3_stage/"
-          file_format: "(format_name = dws.dwh_01_ext.FF_SEMICOLON)"
+          location: "@WILLIBALD_AUTOMATEDV_DEV.DWH_01_EXT.DWH_01_EXT_STAGE/"
+          file_format: "(format_name = WILLIBALD_AUTOMATEDV_DEV.DWH_01_EXT.FF_SEMICOLON)"
           auto_refresh: false
-          pattern: "ldts/misc/kategorie_termintreue/kategorie_termintreue_.*[.]csv"
+          pattern: "V1.0/misc/kategorie_termintreue/kategorie_termintreue_.*[.]csv"
           partitions:
             - name: filenamedate
               data_type: varchar
