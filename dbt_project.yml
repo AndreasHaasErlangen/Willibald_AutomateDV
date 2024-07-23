@@ -42,6 +42,8 @@ models:
         +schema: dwh_02_load
         tags:
             - load
+        pre-hook:
+          - "{% if flags.FULL_REFRESH %} MERGE INTO {{ source('LOAD_EXT_META', 'META_HWM') }} t USING (SELECT '{{ this }}' as object_name) s ON t.object_name = s.object_name WHEN MATCHED THEN DELETE {% endif %}"            
     dwh_03_stage:
         +schema: dwh_03_stage
         tags:
