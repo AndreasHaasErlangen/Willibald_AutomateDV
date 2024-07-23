@@ -1,7 +1,7 @@
 {# template hub Version:0.1.0 #}
 {# automatically generated based on dataspot#}
 
-{{ config(materialized="table", pre_hook=["{{ datavault_extension.refresh_external_table('WILLIBALD_AUTOMATEDV_DEV.EXT_WEBSHOP_LIEFERUNG','snowflake_external_table') }}"], post_hook=["{{ datavault_extension.insert_hwm(this,'ldts_source') }}"]) }}
+{{ config(materialized="table", pre_hook=["{{ datavault_extension.refresh_external_table('WILLIBALD_AUTOMATEDV_DEV.EXT_WEBSHOP_LIEFERUNG','snowflake_external_table') }}"], post_hook=["{{ datavault_extension.insert_hwm(this,'ldts') }}"]) }}
 
 {%- set yaml_metadata -%}
 source_model: 
@@ -10,7 +10,7 @@ source_model:
 hwm: True
 source_type: snowflake_external_table
 dub_check:
-- ldts_source
+- ldts
 - bestellungid
 - PosID
 
@@ -38,12 +38,12 @@ columns:
       type_check: True
 
 default_columns:
-    ldts_source:
+    ldts:
       data_type: TIMESTAMP
       format: YYYYMMDD_HH24MISS
       type_check: True
       value: replace(right(filenamedate,19),'.csv','')
-    rsrc_source:
+    rsrc:
       data_type: VARCHAR
       value: filenamedate
 
