@@ -5,8 +5,8 @@
 
 {%- set yaml_metadata -%}
 source_model: 
-  - stg_webshop_kunde
-src_pk: hk_customer_associationpartner_l 
+  - stg_webshop_vereinspartner
+src_pk: hk_associationpartner_customer_l 
 src_fk: 
   - 'hk_customer_h'
   - 'hk_associationpartner_h'

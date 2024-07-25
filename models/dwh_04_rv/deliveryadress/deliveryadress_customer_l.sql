@@ -5,11 +5,11 @@
 
 {%- set yaml_metadata -%}
 source_model: 
-  - stg_webshop_kunde
-src_pk: hk_customer_associationpartner_l 
+  - stg_webshop_lieferadresse
+src_pk: hk_deliveryadress_customer_l 
 src_fk: 
+  - 'hk_deliveryadress_h'
   - 'hk_customer_h'
-  - 'hk_associationpartner_h'
 src_ldts: ldts
 src_source: rsrc
 {%- endset -%}
