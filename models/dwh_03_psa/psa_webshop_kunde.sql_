@@ -1,0 +1,118 @@
+WITH CTE_IncomingView AS
+    (
+    SELECT TOP 5
+        *
+        , 'EXT_WEBSHOP_KUNDE' AS META_FILENAME
+        , 'webshop' AS META_RSRC
+        , '2024-08-09' as ERSTELL_MUT_DATUM
+        , LDTS AS META_EVENTLDTS
+        , SHA2_BINARY(
+            CONCAT(
+                IFNULL(KREDITKARTE::varchar, '<=NULL=>'), '||',
+                IFNULL(GUELTIGBIS::varchar, '<=NULL=>'), '||',
+                IFNULL(KKFIRMA::varchar, '<=NULL=>'), '||',
+                IFNULL(VEREINSPARTNERID::varchar, '<=NULL=>'), '||',
+                IFNULL(VORNAME::varchar, '<=NULL=>'), '||',
+                IFNULL(NAME::varchar, '<=NULL=>'), '||',
+                IFNULL(GESCHLECHT::varchar, '<=NULL=>'), '||',
+                IFNULL(GEBURTSDATUM::varchar, '<=NULL=>'), '||',
+                IFNULL(TELEFON::varchar, '<=NULL=>'), '||',
+                IFNULL(MOBIL::varchar, '<=NULL=>'), '||',
+                IFNULL(EMAIL::varchar, '<=NULL=>')
+            )
+        ) AS Meta_Psa_RecordHash
+        , CONCAT(KUNDEID) AS Meta_Pk_Concat
+        , ROW_NUMBER as META_FILEROWID
+    FROM ah_dwh_02_load.load_webshop_kunde
+
+    )
+--select * from  CTE_IncomingView               
+, CTE_Incoming_Change_Indicator AS
+    (
+        SELECT
+            *,
+            CASE
+              WHEN LAG(Meta_Psa_RecordHash,1) OVER 
+              (
+              PARTITION BY 
+                Meta_Pk_Concat
+              ORDER BY 
+                 META_RSRC, META_FILEROWID
+               ) = Meta_Psa_RecordHash
+               THEN 'Same'
+               ELSE 'Different'
+            END AS VALUE_CHANGE_INDICATOR
+        FROM CTE_IncomingView
+    )
+--select * from CTE_Incoming_Change_Indicator
+, CTE_Incoming_Condense AS 
+    (
+        SELECT
+            *
+            ,ROW_NUMBER() OVER (PARTITION BY Meta_Pk_Concat ORDER BY META_FILEROWID) AS KeyRowNumber            
+        FROM 
+        CTE_Incoming_Change_Indicator WHERE VALUE_CHANGE_INDICATOR = 'Different' 
+    )
+--select * from CTE_Incoming_Condense
+, CTE_MaxLdts AS
+    (
+        SELECT 
+            MAX(META_LDTS) as MaxLdts
+            ,KUNDEID
+            ,CONCAT(KUNDEID) AS Meta_Pk_Concat
+        FROM AH_DWH_03_PSA.PSA_WEBSHOP_KUNDE
+        GROUP BY KUNDEID
+                ,CONCAT(KUNDEID)   
+    )
+--select * from CTE_MaxLdts
+, CTE_MostRecent AS
+                (
+                    SELECT
+                        psa.*
+                        ,Meta_Pk_Concat
+                    FROM AH_DWH_03_PSA.PSA_WEBSHOP_KUNDE psa
+                        JOIN CTE_MaxLdts psamax ON
+                        psa.KUNDEID = psamax.KUNDEID  
+                        AND psa.META_LDTS = psamax.MaxLdts
+                    WHERE
+                        psa.Meta_Psa_CdcOperation != 'Delete' /** Show all except deleted!!! **/
+                )
+--select * from CTE_MostRecent                
+SELECT
+IFF(IV.META_FILEROWID IS NULL, 'CDC DETECTION', IV.META_RSRC) AS META_RSRC,
+        IFF(IV.META_FILEROWID IS NULL, -1, IV.META_FILEROWID) AS META_FILEROWID,
+        '2024-08-09 12:00:00' AS META_LDTS,
+        IFF(IV.META_FILEROWID IS NULL, '2024-08-09 12:00:00', IV.META_EVENTLDTS) AS META_EVENTLDTS,
+        ':2' AS Meta_EtlProcessId,
+        ':3' AS Meta_EtlBatchId,
+        CASE
+            WHEN (IV.Meta_Pk_Concat IS NULL) THEN 'Delete'
+            WHEN (MR.Meta_Pk_Concat IS NULL) THEN 'Insert'
+            WHEN (IV.Meta_Pk_Concat IS NOT NULL) AND (MR.Meta_Pk_Concat IS NOT NULL) AND IV.Meta_Psa_RecordHash <> MR.Meta_Psa_RecordHash THEN 'Change'
+            ELSE 'No Change'
+END AS Meta_Psa_CdcOperation,
+        IFF(IV.META_FILEROWID IS NULL, MR.Meta_Psa_RecordHash, IV.Meta_Psa_RecordHash) AS Meta_Psa_RecordHash,
+         IFF(IV.META_FILEROWID IS NULL, MR.KREDITKARTE, IV.KREDITKARTE) AS KREDITKARTE,
+        IFF(IV.META_FILEROWID IS NULL, MR.GUELTIGBIS, IV.GUELTIGBIS) AS GUELTIGBIS,
+        IFF(IV.META_FILEROWID IS NULL, MR.KKFIRMA, IV.KKFIRMA) AS KKFIRMA,
+        IFF(IV.META_FILEROWID IS NULL, MR.VEREINSPARTNERID, IV.VEREINSPARTNERID) AS VEREINSPARTNERID,
+        IFF(IV.META_FILEROWID IS NULL, MR.KUNDEID, IV.KUNDEID) AS KUNDEID,
+        IFF(IV.META_FILEROWID IS NULL, MR.VORNAME, IV.VORNAME) AS VORNAME,
+        IFF(IV.META_FILEROWID IS NULL, MR.NAME, IV.NAME) AS NAME,
+        IFF(IV.META_FILEROWID IS NULL, MR.GESCHLECHT, IV.GESCHLECHT) AS GESCHLECHT,
+        IFF(IV.META_FILEROWID IS NULL, MR.GEBURTSDATUM, IV.GEBURTSDATUM) AS GEBURTSDATUM,
+        IFF(IV.META_FILEROWID IS NULL, MR.TELEFON, IV.TELEFON) AS TELEFON,
+        IFF(IV.META_FILEROWID IS NULL, MR.MOBIL, IV.MOBIL) AS MOBIL,
+        IFF(IV.META_FILEROWID IS NULL, MR.EMAIL, IV.EMAIL) AS EMAIL,
+         IFF(IV.META_FILEROWID IS NULL, MR.ERSTELL_MUT_DATUM, IV.ERSTELL_MUT_DATUM) AS ERSTELL_MUT_DATUM,
+        IFF(IV.META_FILEROWID IS NULL, MR.META_FILENAME, IV.META_FILENAME) AS META_FILENAME
+        FROM CTE_Incoming_Condense IV
+FULL OUTER JOIN CTE_MostRecent MR ON IV.Meta_Pk_Concat = MR.Meta_Pk_Concat
+WHERE (
+    CASE
+        WHEN (IV.Meta_Pk_Concat IS NULL) THEN 'Delete'
+        WHEN (MR.Meta_Pk_Concat IS NULL) THEN 'Insert'
+        WHEN (IV.Meta_Pk_Concat IS NOT NULL) AND (MR.Meta_Pk_Concat IS NOT NULL) AND IV.Meta_Psa_RecordHash <> MR.Meta_Psa_RecordHash THEN 'Change'
+        ELSE 'No Change'
+    END
+) != 'No Change'    
